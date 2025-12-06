@@ -21,7 +21,7 @@ describe('Teste de API em Produtos', () => {
         })
     });
 
-    it.only('Cadastrar produtos - POST', () => {
+    it('Cadastrar produtos - POST', () => {
         let produto = 'Produto Teste ' + Math.floor(Math.random() * 100000)
         cy.cadastrarProduto(token, produto, 99, 'teste', 112)
         .should((response) => {
@@ -38,4 +38,28 @@ describe('Teste de API em Produtos', () => {
         })
 
     })
+
+    it.only('Deve editar um produto com sucesso', () => {
+        let produto = 'Produto Teste EDITADO ' + Math.floor(Math.random() * 100000)
+        cy.cadastrarProduto(token, produto, 99, 'Produto EDITADO', 112)
+            .then(response => {
+                let id = response.body._id
+                cy.request({
+                    method: 'PUT',
+                    url: `produtos/${id}`,
+                    headers: {authorization: token},
+                    body: {
+                        "nome": produto,
+                        "preco": 999,
+                        "descricao": "PRODUTO EDITADO",
+                        "quantidade": 111
+                    }
+                }).should((response) => {
+                    expect(response.status).to.equal(200)
+                    expect(response.body.message).to.equal('Registro alterado com sucesso')
+                })
+                    })
+        
+        
+    });
 })

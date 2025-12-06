@@ -22,17 +22,17 @@ describe('Teste de API em Produtos', () => {
     });
 
     it.only('Cadastrar produtos - POST', () => {
-        
+        let produto = 'Produto Teste ' + Math.floor(Math.random() * 100000)
         cy.request({
             method: 'POST',
             url: 'produtos',
             headers: {authorization: token},
             body: {
                 //TO DO criar produto automat
-                "nome": "Produto Teste 03",
-                "preco": 470,
+                "nome": produto,
+                "preco": 99,
                 "descricao": "Mouse",
-                "quantidade": 381
+                "quantidade": 111
             }
             }).should((response) => {
                 expect(response.status).to.equal(201)

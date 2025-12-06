@@ -21,7 +21,7 @@ describe('Teste de API em Produtos', () => {
         })
     });
 
-    it.only('Cadastrar produtos - POST', () => {
+    it('Cadastrar produtos - POST', () => {
         let produto = 'Produto Teste ' + Math.floor(Math.random() * 100000)
         cy.request({
             method: 'POST',
@@ -40,4 +40,22 @@ describe('Teste de API em Produtos', () => {
         })
     });
 
-});
+    it.only('Deve validar mensagem de produto já cadastrado', () => {
+        cy.request({
+            method: 'POST',
+            url: 'produtos',
+            headers: {authorization: token},
+            body: {
+                //TO DO criar produto automat
+                "nome": 'Produto Teste 01',
+                "preco": 99,
+                "descricao": "Mouse",
+                "quantidade": 111
+            }, failOnStatusCode: false
+            }).should((response) => {
+                expect(response.status).to.equal(400)
+                expect(response.body.message).to.equal('Já existe produto com esse nome')
+        })
+
+    })
+})

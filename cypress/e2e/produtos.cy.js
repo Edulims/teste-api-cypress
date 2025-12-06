@@ -9,7 +9,7 @@ describe('Teste de API em Produtos', () => {
         })
     });
     
-    it('Listar produtos - GET', () => {
+    it('Deve Listar produtos - GET', () => {
         cy.request({
             method: 'GET',
             url: 'produtos',
@@ -21,7 +21,7 @@ describe('Teste de API em Produtos', () => {
         })
     });
 
-    it('Cadastrar produtos - POST', () => {
+    it('Deve Cadastrar produtos - POST', () => {
         let produto = 'Produto Teste ' + Math.floor(Math.random() * 100000)
         cy.cadastrarProduto(token, produto, 99, 'teste', 112)
         .should((response) => {
@@ -39,7 +39,7 @@ describe('Teste de API em Produtos', () => {
 
     })
 
-    it.only('Deve editar um produto com sucesso', () => {
+    it('Deve editar um produto com sucesso', () => {
         let produto = 'Produto Teste EDITADO ' + Math.floor(Math.random() * 100000)
         cy.cadastrarProduto(token, produto, 99, 'Produto EDITADO', 112)
             .then(response => {
@@ -60,6 +60,23 @@ describe('Teste de API em Produtos', () => {
                 })
                     })
         
+        
+    });
+
+    it('Deve excluir um produto com sucesso', () => {
+        cy.cadastrarProduto(token, 'Produto Teste DELETADO', 100, 'Teste', 999)
+            .then(response => {
+                let id = response.body._id
+                cy.request({
+                    method: 'DELETE',
+                    url: `produtos/${id}`,
+                    headers: {authorization: token}
+                }).should((response) => {
+                    expect(response.status).to.equal(200)
+                    expect(response.body.message).to.equal('Registro excluído com sucesso')
+                
+                })
+            })
         
     });
 })
